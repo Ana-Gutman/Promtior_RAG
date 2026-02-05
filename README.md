@@ -10,7 +10,7 @@ Deployed chatbot:
 
 - https://promtiorrag-production.up.railway.app/
 
-Tip: Open the root URL to use the web UI, or call `POST /promtior/ask` for the API.
+Tip: Open the root URL to use the web UI. To call the backend directly, send a POST request to `/promtior/ask`.
 
 
 ---
@@ -142,7 +142,7 @@ Expected: Answers grounded in retrieved sources. If not found, the response will
 
 ## Deployment
 
-For detailed deployment instructions (local, Docker, Railway, Azure), see **[doc/deployment-and-testing.md](doc/deployment-and-testing.md)**.
+For detailed deployment instructions (local, Docker, Railway), see **[doc/deployment-and-testing.md](doc/deployment-and-testing.md)**.
 
 ---
 
@@ -150,4 +150,3 @@ For detailed deployment instructions (local, Docker, Railway, Azure), see **[doc
 
 - **[doc/project-overview.md](doc/project-overview.md)** — Challenge description, architecture, design decisions, validation results
 - **[doc/component-diagram.md](doc/component-diagram.md)** — Visual diagram of the RAG pipeline
-- **[doc/deployment-and-testing.md](doc/deployment-and-testing.md)** — Step-by-step deployment guide

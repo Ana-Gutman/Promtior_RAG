@@ -98,7 +98,7 @@ The solution follows a standard RAG architecture with five main stages:
 - **Solution**: Implemented robust error handling with user-agent headers and try-catch blocks. The PDF is optional to support partial failure. Logs show which sources succeeded.
 
 **6) Deployment Stalls on Railway**
-- **Challenge**: The deployment stayed in "Initializing" and the app returned 500 errors in production even though local and Docker runs worked.
+- **Challenge**: The deployment stayed in "Initializing" and the app returned 500 errors in production even though local and Docker runs worked. I also ran into constraints with the Railway free tier while trying to finish deployment.
 - **Solution**: Fixed the container to use Railway's dynamic `PORT` and ensured runtime environment variables are set in Railway (especially `OPENAI_API_KEY`). Also verified the vector store files were included in the repo. After these changes, the deployment completed and the chatbot responded correctly.
 
 ---
