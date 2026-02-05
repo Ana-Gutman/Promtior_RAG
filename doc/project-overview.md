@@ -4,10 +4,6 @@
 
 **Objective**: Design, implement, and deploy a chatbot that uses the RAG (Retrieval Augmented Generation) architecture to answer questions about the Promtior company website.
 
-**Required Questions**:
-- What services does Promtior offer?
-- When was the company founded?
-
 **Tech Stack**:
 - LangChain with LangServe
 - OpenAI API (gpt-4o-mini)
@@ -16,26 +12,21 @@
 - Docker for containerization
 - Cloud deployment (Railway recommended)
 
-**Required Documentation**:
-- Project overview (this document)
-- Component diagram showing interactions
-- Comprehensive deployment guide
-
 ---
 
 ## Implementation Approach
 
-This solution implements a production-ready RAG architecture that prioritizes **accuracy, grounding, and non-hallucination** over generative flexibility. The chatbot answers ONLY using verified sources; if the answer is not found, it explicitly states: "I don't have that information".
+This solution implements a production-ready RAG architecture that prioritizes **accuracy, grounding, and non-hallucination** over generative flexibility. The chatbot answers only using verified sources; if the answer is not found, it explicitly states: "I don't have that information".
 
 ---
 
 ## System Architecture (Question to Answer Flow)
 
-The solution follows a standard but production-ready RAG architecture with five main stages:
+The solution follows a standard RAG architecture with five main stages:
 
 1. **Content Ingestion**
    - Public website content is scraped and normalized.
-   - An optional Promtior PDF presentation is ingested to enrich the knowledge base.
+   - An Promtior PDF presentation is ingested to enrich the knowledge base.
    - Documents are split into semantically coherent chunks.
    - Each chunk is embedded using OpenAI embeddings.
    - Embeddings are persisted locally using a FAISS vector store.
@@ -58,10 +49,9 @@ The solution follows a standard but production-ready RAG architecture with five 
    - **LangChain Composition**: The retriever and LLM are composed using LangChain's `create_retrieval_chain` and `create_stuff_documents_chain` for robust document inclusion.
 
 5. **Frontend and Deployment**
-   - A lightweight single-page application (SPA) provides an intuitive user interface for testing.
-   - The entire application is containerized using Docker for reproducible deployments.
+   - A lightweight single-page application (SPA) provides an interactive demo interface.
+   - The application is fully Dockerized for reproducibility.
    - **Auto-initialization**: The vector store is automatically built on first API request if missing (useful for cloud platforms).
-   - **Multi-platform Ready**: Verified to work on Railway, AWS App Service, and other container-based cloud platforms.
 
 ---
 
@@ -80,7 +70,7 @@ The solution follows a standard but production-ready RAG architecture with five 
 - **Deterministic LLM Configuration**  
   Temperature is set to zero to ensure consistent and reproducible answers during evaluation.
 
-- **Caching Layer**  
+- **Lightweight Caching Layer**  
   A lightweight SQLite cache improves performance and reduces OpenAI API usage without adding operational complexity.
 
 ---
@@ -88,8 +78,8 @@ The solution follows a standard but production-ready RAG architecture with five 
 ## Main Challenges Encountered and Solutions
 
 **1) Preventing Hallucinations and Ensuring Factual Accuracy**
-- **Challenge**: Early implementations allowed the LLM to infer or extrapolate beyond the retrieved documents.
-- **Solution**: Implemented a strict prompt contract that explicitly instructs the LLM to ONLY use retrieved context. If the answer is not present, a deterministic fallback response ("I don't have that information") is enforced. Temperature is set to 0 for reproducibility.
+- **Challenge**: Early iterations allowed the LLM to infer beyond retrieved documents, producing plausible but unverified answers.
+- **Solution**: Enforced a strict prompt policy and retrieval-first flow. The model is instructed to use only retrieved context and to return a fixed refusal when evidence is missing.
 
 **2) Vector Store Persistence Across Local and Cloud Environments**
 - **Challenge**: Local development uses relative paths (./vectorstore), but containerized deployments expect absolute paths (/app/vectorstore). This inconsistency broke deployments.
@@ -106,6 +96,10 @@ The solution follows a standard but production-ready RAG architecture with five 
 **5) Data Ingestion from Dynamic Sources**
 - **Challenge**: Scraping the website could fail due to network issues or HTML structure changes.
 - **Solution**: Implemented robust error handling with user-agent headers and try-catch blocks. The PDF is optional to support partial failure. Logs show which sources succeeded.
+
+**6) Deployment Stalls on Railway**
+- **Challenge**: The deployment stayed in "Initializing" and the app returned 500 errors in production even though local and Docker runs worked.
+- **Solution**: Fixed the container to use Railway's dynamic `PORT` and ensured runtime environment variables are set in Railway (especially `OPENAI_API_KEY`). Also verified the vector store files were included in the repo. After these changes, the deployment completed and the chatbot responded correctly.
 
 ---
 
@@ -126,35 +120,3 @@ The solution follows a standard but production-ready RAG architecture with five 
 - Type hints and error handling throughout.
 - Comprehensive logging for debugging.
 
----
-
-## Step-by-Step: Local Validation
-
-To validate this solution locally before submission:
-
-```bash
-# 1. Setup environment
-python -m venv .venv
-./.venv/Scripts/activate
-pip install -r requirements.txt
-
-# 2. Set environment variables
-set OPENAI_API_KEY=your_key
-set OPENAI_MODEL=gpt-4o-mini
-set OPENAI_TEMPERATURE=0
-set VECTORSTORE_DIR=./vectorstore
-set DOCS_DIR=./data
-
-# 3. Build the vector store
-python -m app.ingestion
-
-# 4. Run the API
-uvicorn app.langserve_app:app --host 0.0.0.0 --port 8000
-
-# 5. Test the required questions
-# - UI: http://localhost:8000
-# - What services does Promtior offer?
-# - When was the company founded?
-```
-
-For detailed cloud deployment steps, see [deployment-and-testing.md](./deployment-and-testing.md).

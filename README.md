@@ -4,6 +4,17 @@ A Retrieval-Augmented Generation (RAG) chatbot that answers factual questions ab
 
 ---
 
+## Live Demo
+
+Deployed chatbot:
+
+- https://promtiorrag-production.up.railway.app/
+
+Tip: Open the root URL to use the web UI, or call `POST /promtior/ask` for the API.
+
+
+---
+
 ## Features
 
 - Context-grounded answers (no hallucinations)
