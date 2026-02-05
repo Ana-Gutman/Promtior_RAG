@@ -10,7 +10,14 @@ Deployed chatbot:
 
 - https://promtiorrag-production.up.railway.app/
 
-Tip: Open the root URL to use the web UI. To call the backend directly, send a POST request to `/promtior/ask`.
+Tip: Open the root URL to use the web UI.
+To call the backend directly, send a POST request to `/promtior/ask`, for example:
+
+```bash
+curl -X POST "https://promtiorrag-production.up.railway.app/promtior/ask" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What services does Promtior offer?"}'
+```
 
 
 ---
