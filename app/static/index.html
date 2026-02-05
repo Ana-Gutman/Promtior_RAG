@@ -10,14 +10,14 @@
   <style>
     :root{
       --bg:#0b0f1e;
-      --panel:#101729;
-      --panel-2:#0f1c2b;
-      --ink:#e9eef5;
-      --muted:#9fb0c4;
-      --accent:#f7c948;
-      --accent-2:#ff7a59;
-      --bubble-user:#f7c948;
-      --bubble-bot:#16243a;
+      --panel:#0f1626;
+      --panel-2:#111c2e;
+      --ink:#e6edf5;
+      --muted:#9ba7b8;
+      --accent:#6ea8fe;
+      --accent-2:#6ef2c2;
+      --bubble-user:#2b78ff;
+      --bubble-bot:#15233a;
       --ring:rgba(255,255,255,0.08);
     }
     *{box-sizing:border-box}
@@ -37,8 +37,8 @@
     }
     .frame{
       width:100%;
-      max-width:980px;
-      background:linear-gradient(180deg,rgba(16,23,41,0.9),rgba(9,16,30,0.95));
+      max-width:900px;
+      background:linear-gradient(180deg,rgba(15,22,38,0.92),rgba(9,14,26,0.96));
       border:1px solid var(--ring);
       border-radius:20px;
       box-shadow:0 30px 80px rgba(0,0,0,0.45);
@@ -63,8 +63,8 @@
     }
     .logo{
       width:44px;height:44px;border-radius:12px;
-      background:conic-gradient(from 210deg,var(--accent),var(--accent-2),#ffd8a8,var(--accent));
-      box-shadow:0 10px 30px rgba(247,201,72,0.25);
+      background:radial-gradient(circle at 30% 30%,#ffffff, #aab6c6 40%, #2b3850 70%);
+      box-shadow:0 10px 26px rgba(30,40,70,0.35);
     }
     h1{
       margin:0;
@@ -85,12 +85,7 @@
       color:var(--muted);
       background:rgba(14,20,35,0.7);
     }
-    .content{
-      display:grid;
-      grid-template-columns:1fr 280px;
-      gap:16px;
-      padding:20px 22px 24px;
-    }
+    .content{padding:20px 22px 24px}
     .panel{
       background:linear-gradient(180deg,#0f1629,#0b1324);
       border:1px solid var(--ring);
@@ -117,9 +112,9 @@
       white-space:pre-wrap;
     }
     .bubble.user{
-      background:linear-gradient(120deg,#f7c948,#ffb347);
-      color:#1b1400;
-      box-shadow:0 6px 18px rgba(247,201,72,0.25);
+      background:linear-gradient(120deg,#2b78ff,#6ea8fe);
+      color:#f7fbff;
+      box-shadow:0 6px 18px rgba(110,168,254,0.25);
     }
     .bubble.bot{
       background:linear-gradient(180deg,#15243b,#111d33);
@@ -142,19 +137,19 @@
       transition:border-color 160ms ease, box-shadow 160ms ease;
     }
     input[type="text"]:focus{
-      border-color:rgba(247,201,72,0.7);
-      box-shadow:0 0 0 3px rgba(247,201,72,0.15);
+      border-color:rgba(110,168,254,0.75);
+      box-shadow:0 0 0 3px rgba(110,168,254,0.18);
     }
     button{
       padding:12px 16px;
       border-radius:12px;
       border:0;
-      background:linear-gradient(120deg,#f7c948,#ff7a59);
-      color:#1b1400;
+      background:linear-gradient(120deg,#2b78ff,#6ea8fe);
+      color:#f7fbff;
       font-weight:700;
       cursor:pointer;
       transition:transform 120ms ease, box-shadow 160ms ease;
-      box-shadow:0 12px 22px rgba(255,122,89,0.2);
+      box-shadow:0 12px 22px rgba(43,120,255,0.2);
     }
     button:hover{transform:translateY(-1px)}
     button:active{transform:translateY(0)}
@@ -164,28 +159,26 @@
       font-size:12px;
       line-height:1.4;
     }
-    .side h3{
-      margin:0 0 8px 0;
-      font-size:14px;
-      color:#ffd796;
-      text-transform:uppercase;
-      letter-spacing:1px;
-    }
-    .hint{
+    .quick-starts{
+      margin-top:12px;
       display:flex;
-      flex-direction:column;
+      flex-wrap:wrap;
       gap:8px;
-      color:var(--muted);
-      font-size:13px;
     }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 10px;
-      border-radius:10px;
+    .chip{
       border:1px solid var(--ring);
-      background:rgba(16,25,40,0.7);
+      background:rgba(13,20,36,0.75);
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      transition:all 140ms ease;
+    }
+    .chip:hover{
+      border-color:rgba(110,168,254,0.6);
+      color:#dfe8f6;
+      transform:translateY(-1px);
     }
     .footer{
       padding:10px 22px 20px;
@@ -198,8 +191,6 @@
     @keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
     @keyframes floatIn{from{transform:translateY(6px);opacity:0}to{transform:translateY(0);opacity:1}}
     @media (max-width:900px){
-      .content{grid-template-columns:1fr}
-      .side{order:-1}
       .chat{height:50vh}
     }
   </style>
@@ -214,7 +205,7 @@
           <div class="subtitle">Context-first assistant for company knowledge</div>
         </div>
       </div>
-      <div class="pill">Live Knowledge Graph</div>
+      <div class="pill">Trusted Sources</div>
     </header>
 
     <div class="content">
@@ -224,16 +215,13 @@
           <input id="q" type="text" placeholder="Ask about services, timelines, or deliverables..." />
           <button id="send">Ask</button>
         </div>
+        <div class="quick-starts" aria-label="Quick start prompts">
+          <button class="chip" type="button">What services does Promtior offer?</button>
+          <button class="chip" type="button">When was the company founded?</button>
+          <button class="chip" type="button">What industries does Promtior specialize in?</button>
+        </div>
         <div id="sources" class="sources"></div>
       </section>
-
-      <aside class="panel side">
-        <h3>Quick Starts</h3>
-        <div class="hint">
-          <div class="tag">What services does Promtior offer?</div>
-          <div class="tag">When was the company founded?</div>
-        </div>
-      </aside>
     </div>
 
     <div class="footer">
@@ -246,6 +234,7 @@ const chat = document.getElementById('chat');
 const q = document.getElementById('q');
 const send = document.getElementById('send');
 const sourcesDiv = document.getElementById('sources');
+const quickStarts = document.querySelectorAll('.chip');
 
 function append(who, text) {
   const d = document.createElement('div');
@@ -287,6 +276,13 @@ send.onclick = async () => {
 };
 
 q.addEventListener('keydown', (e) => { if (e.key === 'Enter') send.click(); });
+quickStarts.forEach((chip) => {
+  chip.addEventListener('click', () => {
+    q.value = chip.innerText;
+    q.focus();
+    send.click();
+  });
+});
 
 append('bot', "Hello — I'm Promtior's RAG assistant. Ask me about services or company history.");
 </script>

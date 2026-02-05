@@ -4,26 +4,23 @@ Below is a high-level component diagram that shows the flow from user question t
 
 ```mermaid
 flowchart LR
-  U[User / Web UI] -->|Question| API[FastAPI + LangServe]
+  U[User / Web UI] -->|Question| API[FastAPI + LangServe API]
   API -->|Cache lookup| C[(SQLite Cache)]
-  C -->|Hit: answer| API
-  API -->|Miss| RAG[LangChain RAG Chain]
-  RAG -->|Embed query| E[OpenAI Embeddings]
+  C -->|Cache hit| API
+  API -->|Cache miss| RAG[LangChain RAG Chain]
+
+  RAG -->|Embed query| E[OpenAI Embeddings API]
   RAG -->|Retrieve top-k| VS[(FAISS Vector Store)]
-  VS -->|Context| RAG
+  VS -->|Relevant context| RAG
+
   RAG -->|Prompt + context| LLM[OpenAI Chat Model]
   LLM -->|Answer| API
-  API -->|Response| U
+  API -->|JSON Response| U
 
-  subgraph Ingestion (offline)
-    W[Promtior Website] --> S[Scraper]
+  subgraph "Ingestion (offline)"
+    W[Promtior Website] --> S[Web Scraper]
     P[Promtior PDF] --> S
     S --> T[Text Splitter]
-    T --> E2[OpenAI Embeddings]
+    T --> E2[OpenAI Embeddings API]
     E2 --> VS
   end
-```
-
-Notes:
-- The UI calls the custom `/promtior/ask` endpoint (cached), while LangServe exposes `/promtior/invoke` for direct chain access.
-- The ingestion pipeline runs separately to build and persist the FAISS index.
