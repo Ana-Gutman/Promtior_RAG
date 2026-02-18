@@ -147,12 +147,6 @@ Expected: Answers grounded in retrieved sources. If not found, the response will
 
 ---
 
-## Deployment
-
-For detailed deployment instructions (local, Docker, Railway), see **[doc/deployment-and-testing.md](doc/deployment-and-testing.md)**.
-
----
-
 ## Documentation
 
 - **[doc/project-overview.md](doc/project-overview.md)** — Challenge description, architecture, design decisions, validation results
